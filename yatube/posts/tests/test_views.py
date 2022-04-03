@@ -9,6 +9,7 @@ from django.test import Client, override_settings, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post, User
+from yatube.settings import POSTS_ON_PAGE
 
 AUTHOR = 'auth'
 CONTEXT = 'page_obj'
@@ -171,7 +172,7 @@ class ViewTests(TestCase):
         for reverse_name in self.pages_with_paginator.keys():
             with self.subTest(page=reverse_name):
                 response = self.client.get(reverse_name)
-                self.assertEqual(len(response.context[CONTEXT]), 10)
+                self.assertEqual(len(response.context[CONTEXT]), POSTS_ON_PAGE)
                 response = self.client.get((reverse_name) + '?page=2')
                 if reverse_name == self.reverse_group:
                     last_objects = 3

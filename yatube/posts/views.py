@@ -5,12 +5,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
+from yatube.settings import POSTS_ON_PAGE
 
 
 def index(request):
     template = 'posts/index.html'
     post_list = Post.objects.all()
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, POSTS_ON_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
@@ -23,7 +24,7 @@ def group_posts(request, slug):
     template = 'posts/group_list.html'
     group = get_object_or_404(Group, slug=slug)
     post_list = group.groups.all()
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, POSTS_ON_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
@@ -37,7 +38,7 @@ def profile(request, username):
     template = 'posts/profile.html'
     username = get_object_or_404(User, username=username)
     post_list = username.posts.all()
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, POSTS_ON_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     following = True
@@ -132,7 +133,7 @@ def follow_index(request):
     for follower in username.follower.all():
         followers.append(follower.author)
     post_list = Post.objects.filter(author__in=followers)
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, POSTS_ON_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
